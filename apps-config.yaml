@@ -2,9 +2,9 @@
 
 vars:
   BUNDLE_ID:
-    default: com.zaions.cap_native_update
+    default: com.zaions.cap_firebase
   PRODUCT_NAME:
-    default: 'Cap Native Update'
+    default: 'Capacitor firebase'
 
 platforms:
   ios:

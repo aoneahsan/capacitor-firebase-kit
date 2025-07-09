@@ -1,7 +1,7 @@
 {
-  "name": "capacitor-native-update",
+  "name": "capacitor-firebase-kit",
   "version": "0.0.1",
-  "description": "Native Update Plugin for Capacitor",
+  "description": "Firebase Services (App Check, AdMob, crashlytics, Performance, analytics, Remote Config, Release Monitoring) Plugin for Capacitor",
   "main": "dist/plugin.cjs.js",
   "module": "dist/esm/index.js",
   "types": "dist/esm/index.d.ts",
@@ -14,7 +14,7 @@
     "android/proguard-rules.pro",
     "dist/",
     "ios/Plugin/",
-    "CapacitorNativeUpdate.podspec"
+    "CapacitorFirebaseKit.podspec"
   ],
   "author": {
     "email": "aoneahsan@gmail.com",
@@ -24,17 +24,23 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/capacitor-community/native-update.git"
+    "url": "git+https://github.com/aoneahsan/capacitor-firebase-kit.git"
   },
   "bugs": {
-    "url": "https://github.com/capacitor-community/native-update/issues"
+    "url": "https://github.com/aoneahsan/capacitor-firebase-kit/issues"
   },
   "keywords": [
     "capacitor",
     "plugin",
     "native",
-    "app-updates",
-    "native-updates"
+    "firebase",
+    "app-check",
+    "admob",
+    "crashlytics",
+    "performance",
+    "analytics",
+    "remote-config",
+    "release-monitoring"
   ],
   "scripts": {
     "build": "npm run clean && npm run tsc && rollup -c rollup.config.js",
@@ -48,11 +54,12 @@
   },
   "devDependencies": {
     "@capacitor/android": "^7.4.1",
+    "@capacitor/cli": "^7.4.1",
     "@capacitor/core": "^7.4.1",
     "@capacitor/ios": "^7.4.1",
     "@rollup/plugin-json": "^6.1.0",
     "@rollup/plugin-node-resolve": "^16.0.1",
-    "@types/node": "^24.0.10",
+    "@types/node": "^24.0.12",
     "@typescript-eslint/eslint-plugin": "^8.36.0",
     "@typescript-eslint/parser": "^8.36.0",
     "eslint": "^9.30.1",

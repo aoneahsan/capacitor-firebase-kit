@@ -6,7 +6,7 @@ export default {
     {
       file: 'dist/plugin.js',
       format: 'iife',
-      name: 'CapacitorNativeUpdate',
+      name: 'CapacitorFirebaseKit',
       globals: {
         '@capacitor/core': 'capacitorExports',
       },
