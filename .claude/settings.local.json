@@ -35,7 +35,9 @@
       "Bash(yarn build)",
       "Bash(yarn add:*)",
       "Bash(yarn lint)",
-      "Bash(yarn prettier:*)"
+      "Bash(yarn prettier:*)",
+      "WebFetch(domain:github.com)",
+      "Bash(npm run lint)"
     ],
     "deny": []
   }
