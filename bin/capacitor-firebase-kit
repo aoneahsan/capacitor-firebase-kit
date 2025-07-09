@@ -1,0 +1,22 @@
+#!/usr/bin/env node
+
+const { execSync } = require('child_process');
+const path = require('path');
+
+const args = process.argv.slice(2);
+const command = args[0];
+
+if (command === 'configure') {
+  const platform = args[1] || 'all';
+  const scriptPath = path.join(__dirname, '..', 'scripts', 'configure-firebase.js');
+  execSync(`node ${scriptPath} ${platform}`, { stdio: 'inherit' });
+} else {
+  console.log('Capacitor Firebase Kit CLI');
+  console.log('');
+  console.log('Commands:');
+  console.log('  configure <platform>  - Configure Firebase for your project');
+  console.log('                         platform: android, ios, or all (default)');
+  console.log('');
+  console.log('Example:');
+  console.log('  npx capacitor-firebase-kit configure all');
+}

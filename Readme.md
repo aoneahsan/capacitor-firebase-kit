@@ -28,7 +28,28 @@ npx cap sync
    - **Android**: Download `google-services.json` and place it in `android/app/`
    - **iOS**: Download `GoogleService-Info.plist` and add it to your Xcode project
 
-### Android Setup
+### Automatic Setup (Recommended)
+
+After installing the plugin, it will automatically check your project configuration. To apply automatic fixes:
+
+```bash
+# Configure both platforms
+npx capacitor-firebase-kit configure all
+
+# Or configure specific platform
+npx capacitor-firebase-kit configure android
+npx capacitor-firebase-kit configure ios
+```
+
+This will:
+- ✅ Add required Gradle plugins for Android
+- ✅ Configure Firebase initialization for iOS
+- ✅ Update build files automatically
+- ✅ Create backups of modified files
+
+### Manual Setup (If Automatic Setup Fails)
+
+#### Android Setup
 
 1. Add the following to your app's `android/build.gradle`:
 
@@ -36,29 +57,30 @@ npx cap sync
 buildscript {
     dependencies {
         classpath 'com.google.gms:google-services:4.4.0'
+        classpath 'com.google.firebase:firebase-crashlytics-gradle:2.9.9'
+        classpath 'com.google.firebase:perf-plugin:1.4.2'
     }
 }
 ```
 
-2. Apply the plugin in `android/app/build.gradle`:
+2. Apply the plugins in `android/app/build.gradle`:
 
 ```gradle
 apply plugin: 'com.google.gms.google-services'
+apply plugin: 'com.google.firebase.crashlytics'
+apply plugin: 'com.google.firebase.firebase-perf'
 ```
 
-### iOS Setup
+#### iOS Setup
 
 1. Add the following to your `ios/App/Podfile`:
 
 ```ruby
 platform :ios, '13.0'
 use_frameworks!
-
-# Add this line
-pod 'Firebase/Core'
 ```
 
-2. Run `npx cap update ios`
+2. Run `cd ios/App && pod install`
 
 3. Initialize Firebase in your `AppDelegate.swift`:
 
@@ -73,6 +95,17 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
 }
 ```
+
+### Why Manual Steps Are Needed
+
+Some configuration must be done at the app level because:
+
+1. **Build Configuration** - Firebase requires build-time processing of your configuration files
+2. **App Lifecycle** - Firebase must be initialized before any plugins load
+3. **Security** - Your Firebase configuration files contain project-specific credentials
+4. **Platform Requirements** - Each platform has specific initialization requirements
+
+The automatic setup script helps minimize these manual steps where possible.
 
 ## Usage
 

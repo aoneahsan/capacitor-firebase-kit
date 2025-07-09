@@ -6,6 +6,9 @@
   "module": "dist/esm/index.js",
   "types": "dist/esm/index.d.ts",
   "unpkg": "dist/plugin.js",
+  "bin": {
+    "capacitor-firebase-kit": "./bin/capacitor-firebase-kit"
+  },
   "files": [
     "android/src/main/",
     "android/build.gradle",
@@ -14,7 +17,9 @@
     "android/proguard-rules.pro",
     "dist/",
     "ios/Plugin/",
-    "CapacitorFirebaseKit.podspec"
+    "CapacitorFirebaseKit.podspec",
+    "scripts/",
+    "bin/"
   ],
   "author": {
     "email": "aoneahsan@gmail.com",
@@ -50,7 +55,9 @@
     "lint": "eslint . --ext ts",
     "prettier": "prettier --write .",
     "prepublishOnly": "npm run build",
-    "swiftlint": "cd ios && swiftlint lint --fix --format --path Plugin --verbose"
+    "swiftlint": "cd ios && swiftlint lint --fix --format --path Plugin --verbose",
+    "postinstall": "node scripts/postinstall.js",
+    "configure": "node scripts/configure-firebase.js"
   },
   "devDependencies": {
     "@capacitor/android": "^7.4.1",
