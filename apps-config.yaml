@@ -2,9 +2,9 @@
 
 vars:
   BUNDLE_ID:
-    default: com.zaions.cap_firebase
+    default: com.ahsanmahmood.cap_firebase
   PRODUCT_NAME:
-    default: 'Capacitor firebase'
+    default: 'Capacitor Firebase Kit'
 
 platforms:
   ios:

@@ -33,4 +33,4 @@
 -dontwarn com.google.firebase.appcheck.**
 
 # Keep plugin classes
--keep class com.zaions.capacitor.firebasekit.** { *; }
+-keep class com.ahsanmahmood.capacitor.firebasekit.** { *; }

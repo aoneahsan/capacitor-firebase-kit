@@ -3,11 +3,24 @@ import type { PluginListenerHandle } from '@capacitor/core';
 import { FirebaseKitWeb } from './web';
 
 /**
- * Plugin implementation that properly routes method calls to services
+ * Web plugin implementation that routes method calls to appropriate Firebase services.
+ * This class acts as a bridge between the Capacitor plugin system and the Firebase Web SDK.
+ * 
+ * @internal
+ * @since 1.0.0
  */
 export class FirebaseKitPluginImplementation extends WebPlugin {
+  /**
+   * Instance of the Firebase Web implementation containing all services.
+   * @private
+   */
   private implementation: FirebaseKitWeb;
 
+  /**
+   * Initialize the plugin implementation with Firebase Web SDK.
+   * 
+   * @since 1.0.0
+   */
   constructor() {
     super();
     this.implementation = new FirebaseKitWeb();

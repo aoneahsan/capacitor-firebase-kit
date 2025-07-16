@@ -1,4 +1,4 @@
-package com.zaions.capacitor.firebasekit.services
+package com.ahsanmahmood.capacitor.firebasekit.services
 
 import com.getcapacitor.JSArray
 import com.getcapacitor.JSObject

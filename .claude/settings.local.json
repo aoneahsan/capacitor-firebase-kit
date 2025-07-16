@@ -38,7 +38,8 @@
       "Bash(yarn prettier:*)",
       "WebFetch(domain:github.com)",
       "Bash(npm run lint)",
-      "Bash(chmod:*)"
+      "Bash(chmod:*)",
+      "Bash(npm run tsc:*)"
     ],
     "deny": []
   }

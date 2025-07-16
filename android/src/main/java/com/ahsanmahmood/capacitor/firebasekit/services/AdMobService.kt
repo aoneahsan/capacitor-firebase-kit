@@ -1,4 +1,4 @@
-package com.zaions.capacitor.firebasekit.services
+package com.ahsanmahmood.capacitor.firebasekit.services
 
 import android.app.Activity
 import android.content.res.Resources

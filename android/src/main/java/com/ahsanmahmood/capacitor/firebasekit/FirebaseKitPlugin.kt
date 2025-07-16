@@ -1,10 +1,10 @@
-package com.zaions.capacitor.firebasekit
+package com.ahsanmahmood.capacitor.firebasekit
 
 import com.getcapacitor.Plugin
 import com.getcapacitor.PluginCall
 import com.getcapacitor.PluginMethod
 import com.getcapacitor.annotation.CapacitorPlugin
-import com.zaions.capacitor.firebasekit.services.*
+import com.ahsanmahmood.capacitor.firebasekit.services.*
 
 @CapacitorPlugin(name = "FirebaseKit")
 class FirebaseKitPlugin : Plugin() {

@@ -81,9 +81,9 @@ According to the README, this plugin will provide:
 
 ### Platform Configuration
 The `apps-config.yaml` contains platform-specific settings:
-- iOS Bundle ID: `com.zaions.capFirebase`
-- Android Package: `com.zaions.cap_firebase`
-- App ID: `com.zaions.cap_firebase`
+- iOS Bundle ID: `com.ahsanmahmood.cap_firebase`
+- Android Package: `com.ahsanmahmood.cap_firebase`
+- App ID: `com.ahsanmahmood.cap_firebase`
 
 ## Important Notes
 - Uses Yarn for dependency management (yarn.lock present)

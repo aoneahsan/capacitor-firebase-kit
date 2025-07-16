@@ -1,24 +1,39 @@
 # Capacitor Firebase Kit
 
+[![npm version](https://badge.fury.io/js/capacitor-firebase-kit.svg)](https://badge.fury.io/js/capacitor-firebase-kit)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![npm downloads](https://img.shields.io/npm/dm/capacitor-firebase-kit.svg)](https://www.npmjs.com/package/capacitor-firebase-kit)
+
 A comprehensive Firebase services plugin for Capacitor that provides secure, type-safe, and framework-independent access to Firebase services across Android, iOS, and Web platforms.
 
-## Features
+## 🚀 Features
 
-- 🔐 **App Check** - Protect your backend resources
-- 💰 **AdMob** - Monetize with banner, interstitial, and rewarded ads
+- 🔐 **App Check** - Protect your backend resources from abuse
+- 💰 **AdMob** - Monetize with banner, interstitial, and rewarded ads  
 - 🐛 **Crashlytics** - Track and fix stability issues
-- 📊 **Performance Monitoring** - Monitor app performance
-- 📈 **Analytics** - Understand user behavior
+- 📊 **Performance Monitoring** - Monitor app performance metrics
+- 📈 **Analytics** - Understand user behavior and app usage
 - ⚙️ **Remote Config** - Dynamically configure your app
+- 📱 **Cross-platform** - Works on iOS, Android, and Web
+- 🔍 **Type-safe** - Full TypeScript support with comprehensive types
+- 🎯 **Framework-agnostic** - Works with any JavaScript framework
+- 🛡️ **Production-ready** - Battle-tested and reliable
 
-## Installation
+## 📦 Installation
 
 ```bash
 npm install capacitor-firebase-kit
 npx cap sync
 ```
 
-## Setup
+Or with yarn:
+
+```bash
+yarn add capacitor-firebase-kit
+npx cap sync
+```
+
+## 🔧 Setup
 
 ### Prerequisites
 
@@ -107,7 +122,7 @@ Some configuration must be done at the app level because:
 
 The automatic setup script helps minimize these manual steps where possible.
 
-## Usage
+## 📖 Usage
 
 ### Import the Plugin
 
@@ -334,7 +349,7 @@ await FirebaseKit.remoteConfig.addListener('remoteConfigUpdated', (update) => {
 });
 ```
 
-## Type Safety
+## 🔒 Type Safety
 
 This plugin is fully typed with TypeScript. All methods, parameters, and return types are strongly typed for better development experience and fewer runtime errors.
 
@@ -347,7 +362,7 @@ import type {
 } from 'capacitor-firebase-kit';
 ```
 
-## Error Handling
+## 🚨 Error Handling
 
 All methods return promises and will reject with typed error codes:
 
@@ -361,7 +376,7 @@ try {
 }
 ```
 
-## Platform Support
+## 📱 Platform Support
 
 | Feature | iOS | Android | Web |
 |---------|-----|---------|-----|
@@ -376,26 +391,36 @@ try {
 ⚠️ Partially supported (some features may not be available)
 ❌ Not supported
 
-## License
+## 📄 License
 
 MIT
 
-## Author
+## 👨‍💻 Author
 
 **Ahsan Mahmood**
-- Website: [https://aoneahsan.com](https://aoneahsan.com)
-- Email: aoneahsan@gmail.com
-- LinkedIn: [https://linkedin.com/in/aoneahsan](https://linkedin.com/in/aoneahsan)
 
-## Company
+An experienced software engineer passionate about creating high-quality, open-source tools for the developer community.
 
-**Zaions**
-- Website: [https://zaions.com](https://zaions.com)
+- 🌐 Website: [https://aoneahsan.com](https://aoneahsan.com)
+- 📧 Email: aoneahsan@gmail.com
+- 💼 LinkedIn: [https://linkedin.com/in/aoneahsan](https://linkedin.com/in/aoneahsan)
+- 🐦 Twitter: [@aoneahsan](https://twitter.com/aoneahsan)
+- 💻 GitHub: [@aoneahsan](https://github.com/aoneahsan)
 
-## Contributing
+## 🤝 Contributing
 
-Contributions are welcome! Please feel free to submit a Pull Request.
+Contributions are welcome! Please feel free to submit a Pull Request. For major changes, please open an issue first to discuss what you would like to change.
 
-## Support
+Please make sure to update tests as appropriate.
+
+## 🆘 Support
 
 For issues and feature requests, please [create an issue](https://github.com/aoneahsan/capacitor-firebase-kit/issues) on GitHub.
+
+## 🌟 Acknowledgments
+
+This plugin is open-source and created for the community. Special thanks to all contributors and users who help make this project better.
+
+---
+
+Made with ❤️ by Ahsan Mahmood for the Capacitor community
