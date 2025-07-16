@@ -1,6 +1,6 @@
 {
   "name": "capacitor-firebase-kit",
-  "version": "0.0.3",
+  "version": "1.0.0",
   "description": "Firebase Services (App Check, AdMob, crashlytics, Performance, analytics, Remote Config, Release Monitoring) Plugin for Capacitor",
   "main": "dist/plugin.cjs.js",
   "module": "dist/esm/index.js",
