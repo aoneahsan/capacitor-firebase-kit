@@ -5,7 +5,7 @@ import { FirebaseKitWeb } from './web';
 /**
  * Web plugin implementation that routes method calls to appropriate Firebase services.
  * This class acts as a bridge between the Capacitor plugin system and the Firebase Web SDK.
- * 
+ *
  * @internal
  * @since 1.0.0
  */
@@ -18,7 +18,7 @@ export class FirebaseKitPluginImplementation extends WebPlugin {
 
   /**
    * Initialize the plugin implementation with Firebase Web SDK.
-   * 
+   *
    * @since 1.0.0
    */
   constructor() {
@@ -27,7 +27,7 @@ export class FirebaseKitPluginImplementation extends WebPlugin {
   }
 
   // Proxy methods to route calls to the appropriate service
-  
+
   // App Check methods
   async appCheckInitialize(options: any): Promise<void> {
     return this.implementation.appCheck.initialize(options);

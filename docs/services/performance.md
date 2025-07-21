@@ -18,8 +18,20 @@ Firebase Performance Monitoring provides:
 ```typescript
 import { FirebaseKit } from 'capacitor-firebase-kit';
 
-await FirebaseKit.performance.initialize({ enabled: true });
+await FirebaseKit.performance.initialize({
+  enabled: true,  // Default: true
+  dataCollectionEnabled: true,  // Default: undefined (uses SDK default)
+  instrumentationEnabled: true  // Default: undefined (uses SDK default)
+});
 ```
+
+#### Performance Configuration Options
+
+| Option | Type | Default | Description |
+|--------|------|---------|-------------|
+| `enabled` | `boolean` | `true` | Whether to enable performance monitoring on startup |
+| `dataCollectionEnabled` | `boolean` | SDK default | Data collection preferences |
+| `instrumentationEnabled` | `boolean` | SDK default | Instrumentation options |
 
 ### 2. Basic Usage
 
@@ -177,6 +189,19 @@ function ProductListScreen() {
 
 ## Network Request Monitoring
 
+### Network Request Options
+
+| Option | Type | Default | Description |
+|--------|------|---------|-------------|
+| `url` | `string` | Required | URL of the request |
+| `httpMethod` | `string` | Required | HTTP method (GET, POST, etc.) |
+| `requestPayloadSize` | `number` | - | Request payload size in bytes |
+| `responseContentType` | `string` | - | Response content type |
+| `responsePayloadSize` | `number` | - | Response payload size in bytes |
+| `httpResponseCode` | `number` | - | HTTP response code (0 for network errors) |
+| `startTime` | `number` | - | Start time in milliseconds |
+| `duration` | `number` | - | Duration in milliseconds |
+
 ### Record Network Requests
 
 ```typescript
@@ -267,7 +292,9 @@ class PerformanceManager {
   private isEnabled = true;
 
   async initialize() {
-    await FirebaseKit.performance.initialize({ enabled: this.isEnabled });
+    await FirebaseKit.performance.initialize({ 
+      enabled: this.isEnabled  // Default: true
+    });
   }
 
   async startTrace(traceName: string): Promise<string> {

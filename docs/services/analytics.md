@@ -20,9 +20,17 @@ Firebase Analytics helps you understand how users interact with your app by trac
 import { FirebaseKit } from 'capacitor-firebase-kit';
 
 await FirebaseKit.analytics.initialize({
-  collectionEnabled: true
+  collectionEnabled: true,  // Default: true
+  sessionTimeoutDuration: 1800  // Default: undefined (uses Firebase default of 30 minutes)
 });
 ```
+
+#### Analytics Configuration Options
+
+| Option | Type | Default | Description |
+|--------|------|---------|-------------|
+| `collectionEnabled` | `boolean` | `true` | Whether to enable analytics collection on startup |
+| `sessionTimeoutDuration` | `number` | Firebase default (1800) | Session timeout in seconds |
 
 ### 2. Basic Usage
 
@@ -274,6 +282,25 @@ await FirebaseKit.analytics.logEvent({
 
 ## Advanced Features
 
+### Default Event Parameters
+
+Set default parameters that will be included with every event:
+
+```typescript
+// Set default parameters
+await FirebaseKit.analytics.setDefaultEventParameters({
+  params: {
+    app_version: '1.2.3',
+    environment: 'production'
+  }
+});
+
+// Clear default parameters
+await FirebaseKit.analytics.setDefaultEventParameters({
+  params: null
+});
+```
+
 ### Conversion Tracking
 
 ```typescript
@@ -370,7 +397,7 @@ await FirebaseKit.analytics.setCollectionEnabled({ enabled: true });
 
 ```typescript
 // Set session timeout (in seconds)
-await FirebaseKit.analytics.setSessionTimeoutDuration({ seconds: 1800 }); // 30 minutes
+await FirebaseKit.analytics.setSessionTimeoutDuration({ duration: 1800 }); // 30 minutes (default Firebase timeout)
 ```
 
 ## Best Practices
@@ -452,7 +479,7 @@ class AnalyticsManager {
     if (this.isInitialized) return;
 
     await FirebaseKit.analytics.initialize({
-      collectionEnabled: true
+      collectionEnabled: true  // Default: true
     });
 
     this.isInitialized = true;

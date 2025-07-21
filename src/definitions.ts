@@ -7,19 +7,19 @@ import type { PluginListenerHandle } from '@capacitor/core';
 export interface FirebaseKitPlugin {
   // App Check Methods
   appCheck: AppCheckService;
-  
+
   // AdMob Methods
   adMob: AdMobService;
-  
+
   // Crashlytics Methods
   crashlytics: CrashlyticsService;
-  
+
   // Performance Methods
   performance: PerformanceService;
-  
+
   // Analytics Methods
   analytics: AnalyticsService;
-  
+
   // Remote Config Methods
   remoteConfig: RemoteConfigService;
 }
@@ -82,24 +82,24 @@ export interface AppCheckInitializeOptions {
    * - 'recaptchaEnterprise': Web reCAPTCHA Enterprise provider
    */
   provider: AppCheckProvider;
-  
+
   /**
    * Site key for reCAPTCHA providers (Web only)
    */
   siteKey?: string;
-  
+
   /**
    * Debug token for debug provider
    */
   debugToken?: string;
-  
+
   /**
    * Whether to automatically refresh tokens
    */
   isTokenAutoRefreshEnabled?: boolean;
 }
 
-export type AppCheckProvider = 
+export type AppCheckProvider =
   | 'debug'
   | 'deviceCheck'
   | 'appAttest'
@@ -128,7 +128,7 @@ export interface AppCheckTokenResult {
    * The App Check token
    */
   token: string;
-  
+
   /**
    * Token expiration time in milliseconds
    */
@@ -263,12 +263,12 @@ export interface AdMobInitializeOptions {
    * An array of test device IDs
    */
   testingDevices?: string[];
-  
+
   /**
    * Whether to initialize for mediation
    */
   initializeForTesting?: boolean;
-  
+
   /**
    * Request track authorization on iOS
    */
@@ -284,7 +284,7 @@ export interface ConsentRequestOptions {
    * Tag for under age of consent
    */
   tagForUnderAgeOfConsent?: boolean;
-  
+
   /**
    * Test device identifiers
    */
@@ -300,7 +300,7 @@ export interface ConsentInfo {
    * Consent status
    */
   status: ConsentStatus;
-  
+
   /**
    * Whether consent form is available
    */
@@ -318,17 +318,17 @@ export interface RequestConfiguration {
    * Maximum ad content rating
    */
   maxAdContentRating?: MaxAdContentRating;
-  
+
   /**
    * Tag for child-directed treatment
    */
   tagForChildDirectedTreatment?: boolean;
-  
+
   /**
    * Tag for under age of consent
    */
   tagForUnderAgeOfConsent?: boolean;
-  
+
   /**
    * Test device identifiers
    */
@@ -346,29 +346,29 @@ export interface BannerAdOptions {
    * Ad unit ID
    */
   adId: string;
-  
+
   /**
    * Ad size
    */
   adSize: BannerAdSize;
-  
+
   /**
    * Position on screen
    */
   position: BannerAdPosition;
-  
+
   /**
    * Margin in pixels
    */
   margin?: number;
-  
+
   /**
    * Whether to show ad on top of web view
    */
   isTesting?: boolean;
 }
 
-export type BannerAdSize = 
+export type BannerAdSize =
   | 'BANNER'
   | 'FULL_BANNER'
   | 'LARGE_BANNER'
@@ -388,7 +388,7 @@ export interface InterstitialAdOptions {
    * Ad unit ID
    */
   adId: string;
-  
+
   /**
    * Whether this is a test ad
    */
@@ -404,7 +404,7 @@ export interface RewardedAdOptions {
    * Ad unit ID
    */
   adId: string;
-  
+
   /**
    * Whether this is a test ad
    */
@@ -420,14 +420,14 @@ export interface RewardedInterstitialAdOptions {
    * Ad unit ID
    */
   adId: string;
-  
+
   /**
    * Whether this is a test ad
    */
   isTesting?: boolean;
 }
 
-export type AdMobEventType = 
+export type AdMobEventType =
   | 'bannerAdLoaded'
   | 'bannerAdFailedToLoad'
   | 'bannerAdOpened'
@@ -554,17 +554,17 @@ export interface CrashlyticsExceptionOptions {
    * Exception message
    */
   message: string;
-  
+
   /**
    * Exception code
    */
   code?: string;
-  
+
   /**
    * Exception domain (iOS)
    */
   domain?: string;
-  
+
   /**
    * Stack trace frames
    */
@@ -580,17 +580,17 @@ export interface StackFrame {
    * File name
    */
   fileName?: string;
-  
+
   /**
    * Line number
    */
   lineNumber?: number;
-  
+
   /**
    * Method/function name
    */
   methodName?: string;
-  
+
   /**
    * Class name
    */
@@ -723,12 +723,12 @@ export interface PerformanceInitializeOptions {
    * Whether to enable performance monitoring on startup
    */
   enabled?: boolean;
-  
+
   /**
    * Data collection preferences
    */
   dataCollectionEnabled?: boolean;
-  
+
   /**
    * Instrumentation options
    */
@@ -744,12 +744,12 @@ export interface TraceMetricOptions {
    * Trace ID
    */
   traceId: string;
-  
+
   /**
    * Metric name
    */
   metricName: string;
-  
+
   /**
    * Metric value
    */
@@ -765,12 +765,12 @@ export interface TraceAttributeOptions {
    * Trace ID
    */
   traceId: string;
-  
+
   /**
    * Attribute name
    */
   attribute: string;
-  
+
   /**
    * Attribute value
    */
@@ -786,37 +786,37 @@ export interface NetworkRequestOptions {
    * URL of the request
    */
   url: string;
-  
+
   /**
    * HTTP method
    */
   httpMethod: 'GET' | 'POST' | 'PUT' | 'DELETE' | 'HEAD' | 'PATCH' | 'OPTIONS';
-  
+
   /**
    * Request payload size in bytes
    */
   requestPayloadSize?: number;
-  
+
   /**
    * Response content type
    */
   responseContentType?: string;
-  
+
   /**
    * Response payload size in bytes
    */
   responsePayloadSize?: number;
-  
+
   /**
    * HTTP response code
    */
   httpResponseCode?: number;
-  
+
   /**
    * Start time in milliseconds
    */
   startTime?: number;
-  
+
   /**
    * Duration in milliseconds
    */
@@ -924,7 +924,7 @@ export interface AnalyticsInitializeOptions {
    * Whether to enable analytics collection on startup
    */
   collectionEnabled?: boolean;
-  
+
   /**
    * Session timeout in seconds
    */
@@ -940,7 +940,7 @@ export interface LogEventOptions {
    * Event name
    */
   name: string;
-  
+
   /**
    * Event parameters
    */
@@ -956,17 +956,17 @@ export interface ConsentSettings {
    * Analytics storage consent
    */
   analyticsStorage?: ConsentType;
-  
+
   /**
    * Ad storage consent
    */
   adStorage?: ConsentType;
-  
+
   /**
    * Ad user data consent
    */
   adUserData?: ConsentType;
-  
+
   /**
    * Ad personalization consent
    */
@@ -1086,7 +1086,7 @@ export interface RemoteConfigInitializeOptions {
    * Minimum fetch interval in seconds
    */
   minimumFetchIntervalInSeconds?: number;
-  
+
   /**
    * Fetch timeout in seconds
    */
@@ -1113,17 +1113,17 @@ export interface RemoteConfigValue {
    * String value
    */
   asString: string;
-  
+
   /**
    * Number value
    */
   asNumber: number;
-  
+
   /**
    * Boolean value
    */
   asBoolean: boolean;
-  
+
   /**
    * Source of the value
    */
@@ -1141,7 +1141,7 @@ export interface RemoteConfigSettings {
    * Minimum fetch interval in seconds
    */
   minimumFetchIntervalInSeconds: number;
-  
+
   /**
    * Fetch timeout in seconds
    */
@@ -1170,20 +1170,20 @@ export enum FirebaseKitErrorCode {
   PERMISSION_DENIED = 'PERMISSION_DENIED',
   UNAVAILABLE = 'UNAVAILABLE',
   INTERNAL = 'INTERNAL',
-  
+
   // App Check errors
   APP_CHECK_TOKEN_EXPIRED = 'APP_CHECK_TOKEN_EXPIRED',
   APP_CHECK_PROVIDER_ERROR = 'APP_CHECK_PROVIDER_ERROR',
-  
+
   // AdMob errors
   AD_LOAD_FAILED = 'AD_LOAD_FAILED',
   AD_SHOW_FAILED = 'AD_SHOW_FAILED',
   AD_NOT_READY = 'AD_NOT_READY',
-  
+
   // Remote Config errors
   CONFIG_FETCH_FAILED = 'CONFIG_FETCH_FAILED',
   CONFIG_UPDATE_FAILED = 'CONFIG_UPDATE_FAILED',
-  
+
   // Platform errors
   NOT_SUPPORTED_ON_PLATFORM = 'NOT_SUPPORTED_ON_PLATFORM',
   WEB_NOT_SUPPORTED = 'WEB_NOT_SUPPORTED',
@@ -1198,12 +1198,12 @@ export interface FirebaseKitError {
    * Error code
    */
   code: FirebaseKitErrorCode;
-  
+
   /**
    * Error message
    */
   message: string;
-  
+
   /**
    * Additional error details
    */

@@ -26,22 +26,31 @@ import { FirebaseKit } from 'capacitor-firebase-kit';
 // iOS - DeviceCheck
 await FirebaseKit.appCheck.initialize({
   provider: 'deviceCheck',
-  isTokenAutoRefreshEnabled: true
+  isTokenAutoRefreshEnabled: true  // Default: false
 });
 
 // Android - Play Integrity
 await FirebaseKit.appCheck.initialize({
   provider: 'playIntegrity',
-  isTokenAutoRefreshEnabled: true
+  isTokenAutoRefreshEnabled: true  // Default: false
 });
 
 // Web - reCAPTCHA v3
 await FirebaseKit.appCheck.initialize({
   provider: 'recaptchaV3',
   siteKey: 'your-recaptcha-site-key',
-  isTokenAutoRefreshEnabled: true
+  isTokenAutoRefreshEnabled: true  // Default: false
 });
 ```
+
+#### Configuration Options
+
+| Option | Type | Default | Description |
+|--------|------|---------|-------------|
+| `provider` | `AppCheckProvider` | Required | The attestation provider to use |
+| `siteKey` | `string` | - | Required for reCAPTCHA providers (Web only) |
+| `debugToken` | `string` | - | Debug token for testing (Debug provider only) |
+| `isTokenAutoRefreshEnabled` | `boolean` | `false` | Whether to automatically refresh tokens |
 
 ## Provider Configuration
 
@@ -55,7 +64,7 @@ await FirebaseKit.appCheck.initialize({
 ```typescript
 await FirebaseKit.appCheck.initialize({
   provider: 'deviceCheck',
-  isTokenAutoRefreshEnabled: true
+  isTokenAutoRefreshEnabled: true  // Default: false
 });
 ```
 
@@ -67,7 +76,7 @@ await FirebaseKit.appCheck.initialize({
 ```typescript
 await FirebaseKit.appCheck.initialize({
   provider: 'appAttest',
-  isTokenAutoRefreshEnabled: true
+  isTokenAutoRefreshEnabled: true  // Default: false
 });
 ```
 
@@ -80,7 +89,7 @@ await FirebaseKit.appCheck.initialize({
 ```typescript
 await FirebaseKit.appCheck.initialize({
   provider: 'playIntegrity',
-  isTokenAutoRefreshEnabled: true
+  isTokenAutoRefreshEnabled: true  // Default: false
 });
 ```
 
@@ -91,7 +100,7 @@ await FirebaseKit.appCheck.initialize({
 ```typescript
 await FirebaseKit.appCheck.initialize({
   provider: 'safetyNet',
-  isTokenAutoRefreshEnabled: true
+  isTokenAutoRefreshEnabled: true  // Default: false
 });
 ```
 
@@ -105,7 +114,7 @@ await FirebaseKit.appCheck.initialize({
 await FirebaseKit.appCheck.initialize({
   provider: 'recaptchaV3',
   siteKey: 'your-recaptcha-v3-site-key',
-  isTokenAutoRefreshEnabled: true
+  isTokenAutoRefreshEnabled: true  // Default: false
 });
 ```
 
@@ -117,7 +126,7 @@ await FirebaseKit.appCheck.initialize({
 await FirebaseKit.appCheck.initialize({
   provider: 'recaptchaEnterprise',
   siteKey: 'your-recaptcha-enterprise-site-key',
-  isTokenAutoRefreshEnabled: true
+  isTokenAutoRefreshEnabled: true  // Default: false
 });
 ```
 
@@ -129,7 +138,7 @@ For testing in development environments:
 await FirebaseKit.appCheck.initialize({
   provider: 'debug',
   debugToken: 'your-debug-token', // Get from Firebase Console
-  isTokenAutoRefreshEnabled: true
+  isTokenAutoRefreshEnabled: true  // Default: false
 });
 ```
 
@@ -143,9 +152,15 @@ const { token } = await FirebaseKit.appCheck.getToken();
 
 // Force refresh token
 const { token: newToken } = await FirebaseKit.appCheck.getToken({
-  forceRefresh: true
+  forceRefresh: true  // Default: false
 });
 ```
+
+#### Get Token Options
+
+| Option | Type | Default | Description |
+|--------|------|---------|-------------|
+| `forceRefresh` | `boolean` | `false` | Force refresh the token even if valid |
 
 ### Auto-Refresh
 
@@ -250,18 +265,18 @@ async function initializeAppCheck() {
   if (platform === 'ios') {
     await FirebaseKit.appCheck.initialize({
       provider: 'deviceCheck',
-      isTokenAutoRefreshEnabled: true
+      isTokenAutoRefreshEnabled: true  // Default: false
     });
   } else if (platform === 'android') {
     await FirebaseKit.appCheck.initialize({
       provider: 'playIntegrity',
-      isTokenAutoRefreshEnabled: true
+      isTokenAutoRefreshEnabled: true  // Default: false
     });
   } else if (platform === 'web') {
     await FirebaseKit.appCheck.initialize({
       provider: 'recaptchaV3',
       siteKey: process.env.RECAPTCHA_SITE_KEY,
-      isTokenAutoRefreshEnabled: true
+      isTokenAutoRefreshEnabled: true  // Default: false
     });
   }
 }

@@ -1,4 +1,4 @@
-import type { 
+import type {
   FirebaseKitPlugin,
   AppCheckService,
   AdMobService,
@@ -38,7 +38,7 @@ import type { PluginListenerHandle } from '@capacitor/core';
 /**
  * Creates a proxy for the Firebase Kit plugin that provides the nested service structure.
  * This proxy organizes the flat plugin interface into logical service groups for better developer experience.
- * 
+ *
  * @param plugin The native plugin instance
  * @returns FirebaseKitPlugin with organized service structure
  * @since 1.0.0
@@ -49,7 +49,7 @@ export function createFirebaseKitProxy(plugin: any): FirebaseKitPlugin {
     /**
      * Initialize Firebase App Check with the specified provider.
      * This must be called before using any other Firebase services.
-     * 
+     *
      * @param options Configuration options for App Check initialization
      * @returns Promise that resolves when App Check is initialized
      * @since 1.0.0
@@ -64,10 +64,10 @@ export function createFirebaseKitProxy(plugin: any): FirebaseKitPlugin {
     async initialize(options: AppCheckInitializeOptions): Promise<void> {
       return plugin.appCheckInitialize(options);
     },
-    
+
     /**
      * Get an App Check token for API requests.
-     * 
+     *
      * @param options Optional token generation options
      * @returns Promise with the App Check token result
      * @since 1.0.0
@@ -79,10 +79,10 @@ export function createFirebaseKitProxy(plugin: any): FirebaseKitPlugin {
     async getToken(options?: AppCheckTokenOptions): Promise<AppCheckTokenResult> {
       return plugin.appCheckGetToken(options);
     },
-    
+
     /**
      * Enable or disable automatic token refresh.
-     * 
+     *
      * @param options Configuration for auto-refresh
      * @returns Promise that resolves when setting is updated
      * @since 1.0.0
@@ -94,10 +94,10 @@ export function createFirebaseKitProxy(plugin: any): FirebaseKitPlugin {
     async setTokenAutoRefreshEnabled(options: { enabled: boolean }): Promise<void> {
       return plugin.appCheckSetTokenAutoRefreshEnabled(options);
     },
-    
+
     /**
      * Add a listener for App Check token changes.
-     * 
+     *
      * @param eventName The event to listen for
      * @param listenerFunc Callback function to handle token updates
      * @returns Promise with listener handle for cleanup
@@ -112,10 +112,10 @@ export function createFirebaseKitProxy(plugin: any): FirebaseKitPlugin {
      */
     async addListener(
       eventName: 'appCheckTokenChanged',
-      listenerFunc: (token: AppCheckTokenResult) => void
+      listenerFunc: (token: AppCheckTokenResult) => void,
     ): Promise<PluginListenerHandle> {
       return plugin.addListener(eventName, listenerFunc);
-    }
+    },
   };
 
   // Create AdMob service proxy
@@ -123,7 +123,7 @@ export function createFirebaseKitProxy(plugin: any): FirebaseKitPlugin {
     /**
      * Initialize Google AdMob with configuration options.
      * Should be called before showing any ads.
-     * 
+     *
      * @param options Optional initialization configuration
      * @returns Promise that resolves when AdMob is initialized
      * @since 1.0.0
@@ -138,11 +138,11 @@ export function createFirebaseKitProxy(plugin: any): FirebaseKitPlugin {
     async initialize(options?: AdMobInitializeOptions): Promise<void> {
       return plugin.adMobInitialize(options);
     },
-    
+
     /**
      * Request consent information from Google UMP SDK.
      * Required for GDPR compliance.
-     * 
+     *
      * @param options Optional consent request configuration
      * @returns Promise with consent information
      * @since 1.0.0
@@ -156,10 +156,10 @@ export function createFirebaseKitProxy(plugin: any): FirebaseKitPlugin {
     async requestConsentInfo(options?: ConsentRequestOptions): Promise<ConsentInfo> {
       return plugin.adMobRequestConsentInfo(options);
     },
-    
+
     /**
      * Show the consent form to the user.
-     * 
+     *
      * @returns Promise with consent status after form completion
      * @since 1.0.0
      * @example
@@ -170,10 +170,10 @@ export function createFirebaseKitProxy(plugin: any): FirebaseKitPlugin {
     async showConsentForm(): Promise<ConsentStatus> {
       return plugin.adMobShowConsentForm();
     },
-    
+
     /**
      * Reset consent information (for testing purposes).
-     * 
+     *
      * @returns Promise that resolves when consent info is reset
      * @since 1.0.0
      * @example
@@ -184,10 +184,10 @@ export function createFirebaseKitProxy(plugin: any): FirebaseKitPlugin {
     async resetConsentInfo(): Promise<void> {
       return plugin.adMobResetConsentInfo();
     },
-    
+
     /**
      * Set global request configuration for all ad requests.
-     * 
+     *
      * @param options Request configuration options
      * @returns Promise that resolves when configuration is set
      * @since 1.0.0
@@ -201,10 +201,10 @@ export function createFirebaseKitProxy(plugin: any): FirebaseKitPlugin {
     async setRequestConfiguration(options: RequestConfiguration): Promise<void> {
       return plugin.adMobSetRequestConfiguration(options);
     },
-    
+
     /**
      * Show a banner ad at the specified position.
-     * 
+     *
      * @param options Banner ad configuration
      * @returns Promise that resolves when banner is shown
      * @since 1.0.0
@@ -220,10 +220,10 @@ export function createFirebaseKitProxy(plugin: any): FirebaseKitPlugin {
     async showBanner(options: BannerAdOptions): Promise<void> {
       return plugin.adMobShowBanner(options);
     },
-    
+
     /**
      * Hide the currently displayed banner ad.
-     * 
+     *
      * @returns Promise that resolves when banner is hidden
      * @since 1.0.0
      * @example
@@ -234,10 +234,10 @@ export function createFirebaseKitProxy(plugin: any): FirebaseKitPlugin {
     async hideBanner(): Promise<void> {
       return plugin.adMobHideBanner();
     },
-    
+
     /**
      * Remove the banner ad from the view hierarchy.
-     * 
+     *
      * @returns Promise that resolves when banner is removed
      * @since 1.0.0
      * @example
@@ -248,10 +248,10 @@ export function createFirebaseKitProxy(plugin: any): FirebaseKitPlugin {
     async removeBanner(): Promise<void> {
       return plugin.adMobRemoveBanner();
     },
-    
+
     /**
      * Load an interstitial ad for later display.
-     * 
+     *
      * @param options Interstitial ad configuration
      * @returns Promise that resolves when ad is loaded
      * @since 1.0.0
@@ -265,10 +265,10 @@ export function createFirebaseKitProxy(plugin: any): FirebaseKitPlugin {
     async loadInterstitial(options: InterstitialAdOptions): Promise<void> {
       return plugin.adMobLoadInterstitial(options);
     },
-    
+
     /**
      * Show the previously loaded interstitial ad.
-     * 
+     *
      * @returns Promise that resolves when ad is shown
      * @since 1.0.0
      * @example
@@ -279,10 +279,10 @@ export function createFirebaseKitProxy(plugin: any): FirebaseKitPlugin {
     async showInterstitial(): Promise<void> {
       return plugin.adMobShowInterstitial();
     },
-    
+
     /**
      * Load a rewarded ad for later display.
-     * 
+     *
      * @param options Rewarded ad configuration
      * @returns Promise that resolves when ad is loaded
      * @since 1.0.0
@@ -296,10 +296,10 @@ export function createFirebaseKitProxy(plugin: any): FirebaseKitPlugin {
     async loadRewarded(options: RewardedAdOptions): Promise<void> {
       return plugin.adMobLoadRewarded(options);
     },
-    
+
     /**
      * Show the previously loaded rewarded ad.
-     * 
+     *
      * @returns Promise that resolves when ad is shown
      * @since 1.0.0
      * @example
@@ -310,10 +310,10 @@ export function createFirebaseKitProxy(plugin: any): FirebaseKitPlugin {
     async showRewarded(): Promise<void> {
       return plugin.adMobShowRewarded();
     },
-    
+
     /**
      * Load a rewarded interstitial ad for later display.
-     * 
+     *
      * @param options Rewarded interstitial ad configuration
      * @returns Promise that resolves when ad is loaded
      * @since 1.0.0
@@ -327,10 +327,10 @@ export function createFirebaseKitProxy(plugin: any): FirebaseKitPlugin {
     async loadRewardedInterstitial(options: RewardedInterstitialAdOptions): Promise<void> {
       return plugin.adMobLoadRewardedInterstitial(options);
     },
-    
+
     /**
      * Show the previously loaded rewarded interstitial ad.
-     * 
+     *
      * @returns Promise that resolves when ad is shown
      * @since 1.0.0
      * @example
@@ -341,10 +341,10 @@ export function createFirebaseKitProxy(plugin: any): FirebaseKitPlugin {
     async showRewardedInterstitial(): Promise<void> {
       return plugin.adMobShowRewardedInterstitial();
     },
-    
+
     /**
      * Add a listener for AdMob events.
-     * 
+     *
      * @param eventName The AdMob event to listen for
      * @param listenerFunc Callback function to handle the event
      * @returns Promise with listener handle for cleanup
@@ -359,10 +359,10 @@ export function createFirebaseKitProxy(plugin: any): FirebaseKitPlugin {
      */
     async addListener(
       eventName: AdMobEventType,
-      listenerFunc: (info: any) => void
+      listenerFunc: (info: any) => void,
     ): Promise<PluginListenerHandle> {
       return plugin.addListener(eventName, listenerFunc);
-    }
+    },
   };
 
   // Create Crashlytics service proxy
@@ -370,7 +370,7 @@ export function createFirebaseKitProxy(plugin: any): FirebaseKitPlugin {
     /**
      * Force a crash for testing purposes.
      * Should only be used in development builds.
-     * 
+     *
      * @returns Promise that resolves before the crash
      * @since 1.0.0
      * @example
@@ -383,11 +383,11 @@ export function createFirebaseKitProxy(plugin: any): FirebaseKitPlugin {
     async crash(): Promise<void> {
       return plugin.crashlyticsCrash();
     },
-    
+
     /**
      * Force a crash with a custom message.
      * Should only be used in development builds.
-     * 
+     *
      * @param options Configuration with crash message
      * @returns Promise that resolves before the crash
      * @since 1.0.0
@@ -403,11 +403,11 @@ export function createFirebaseKitProxy(plugin: any): FirebaseKitPlugin {
     async forceCrash(options: { message: string }): Promise<void> {
       return plugin.crashlyticsForceCrash(options);
     },
-    
+
     /**
      * Log a custom message to Crashlytics.
      * These messages appear in crash reports to help with debugging.
-     * 
+     *
      * @param options Configuration with log message
      * @returns Promise that resolves when message is logged
      * @since 1.0.0
@@ -421,10 +421,10 @@ export function createFirebaseKitProxy(plugin: any): FirebaseKitPlugin {
     async log(options: { message: string }): Promise<void> {
       return plugin.crashlyticsLog(options);
     },
-    
+
     /**
      * Log a non-fatal exception with details.
-     * 
+     *
      * @param options Exception details and stack trace
      * @returns Promise that resolves when exception is logged
      * @since 1.0.0
@@ -444,10 +444,10 @@ export function createFirebaseKitProxy(plugin: any): FirebaseKitPlugin {
     async logException(options: CrashlyticsExceptionOptions): Promise<void> {
       return plugin.crashlyticsLogException(options);
     },
-    
+
     /**
      * Set a user identifier for crash reports.
-     * 
+     *
      * @param options Configuration with user ID
      * @returns Promise that resolves when user ID is set
      * @since 1.0.0
@@ -461,10 +461,10 @@ export function createFirebaseKitProxy(plugin: any): FirebaseKitPlugin {
     async setUserId(options: { userId: string }): Promise<void> {
       return plugin.crashlyticsSetUserId(options);
     },
-    
+
     /**
      * Set custom key-value pairs for crash reports.
-     * 
+     *
      * @param options Configuration with custom attributes
      * @returns Promise that resolves when custom keys are set
      * @since 1.0.0
@@ -482,10 +482,10 @@ export function createFirebaseKitProxy(plugin: any): FirebaseKitPlugin {
     async setCustomKeys(options: { attributes: Record<string, string | number | boolean> }): Promise<void> {
       return plugin.crashlyticsSetCustomKeys(options);
     },
-    
+
     /**
      * Enable or disable crash collection.
-     * 
+     *
      * @param options Configuration for crash collection
      * @returns Promise that resolves when setting is updated
      * @since 1.0.0
@@ -499,10 +499,10 @@ export function createFirebaseKitProxy(plugin: any): FirebaseKitPlugin {
     async setCrashlyticsCollectionEnabled(options: { enabled: boolean }): Promise<void> {
       return plugin.crashlyticsSetCrashlyticsCollectionEnabled(options);
     },
-    
+
     /**
      * Check if crash collection is enabled.
-     * 
+     *
      * @returns Promise with crash collection status
      * @since 1.0.0
      * @example
@@ -513,10 +513,10 @@ export function createFirebaseKitProxy(plugin: any): FirebaseKitPlugin {
     async isCrashlyticsCollectionEnabled(): Promise<{ enabled: boolean }> {
       return plugin.crashlyticsIsCrashlyticsCollectionEnabled();
     },
-    
+
     /**
      * Delete unsent crash reports.
-     * 
+     *
      * @returns Promise that resolves when reports are deleted
      * @since 1.0.0
      * @example
@@ -527,10 +527,10 @@ export function createFirebaseKitProxy(plugin: any): FirebaseKitPlugin {
     async deleteUnsentReports(): Promise<void> {
       return plugin.crashlyticsDeleteUnsentReports();
     },
-    
+
     /**
      * Send unsent crash reports immediately.
-     * 
+     *
      * @returns Promise that resolves when reports are sent
      * @since 1.0.0
      * @example
@@ -541,10 +541,10 @@ export function createFirebaseKitProxy(plugin: any): FirebaseKitPlugin {
     async sendUnsentReports(): Promise<void> {
       return plugin.crashlyticsSendUnsentReports();
     },
-    
+
     /**
      * Record a breadcrumb for crash context.
-     * 
+     *
      * @param options Breadcrumb configuration
      * @returns Promise that resolves when breadcrumb is recorded
      * @since 1.0.0
@@ -558,7 +558,7 @@ export function createFirebaseKitProxy(plugin: any): FirebaseKitPlugin {
      */
     async recordBreadcrumb(options: { name: string; params?: Record<string, any> }): Promise<void> {
       return plugin.crashlyticsRecordBreadcrumb(options);
-    }
+    },
   };
 
   // Create Performance service proxy
@@ -604,7 +604,7 @@ export function createFirebaseKitProxy(plugin: any): FirebaseKitPlugin {
     },
     async recordNetworkRequest(options: NetworkRequestOptions): Promise<void> {
       return plugin.performanceRecordNetworkRequest(options);
-    }
+    },
   };
 
   // Create Analytics service proxy
@@ -641,7 +641,7 @@ export function createFirebaseKitProxy(plugin: any): FirebaseKitPlugin {
     },
     async setDefaultEventParameters(options: { params: Record<string, any> | null }): Promise<void> {
       return plugin.analyticsSetDefaultEventParameters(options);
-    }
+    },
   };
 
   // Create Remote Config service proxy
@@ -681,10 +681,10 @@ export function createFirebaseKitProxy(plugin: any): FirebaseKitPlugin {
     },
     async addListener(
       eventName: 'remoteConfigUpdated',
-      listenerFunc: (config: RemoteConfigUpdate) => void
+      listenerFunc: (config: RemoteConfigUpdate) => void,
     ): Promise<PluginListenerHandle> {
       return plugin.addListener(eventName, listenerFunc);
-    }
+    },
   };
 
   // Return the complete Firebase Kit proxy with all services
@@ -694,6 +694,6 @@ export function createFirebaseKitProxy(plugin: any): FirebaseKitPlugin {
     crashlytics,
     performance,
     analytics,
-    remoteConfig
+    remoteConfig,
   };
 }

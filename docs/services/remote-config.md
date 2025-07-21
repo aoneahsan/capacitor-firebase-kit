@@ -20,9 +20,17 @@ Firebase Remote Config provides:
 import { FirebaseKit } from 'capacitor-firebase-kit';
 
 await FirebaseKit.remoteConfig.initialize({
-  minimumFetchIntervalInSeconds: 3600 // 1 hour
+  minimumFetchIntervalInSeconds: 3600,  // Default: 43200 (12 hours)
+  fetchTimeoutInSeconds: 60  // Default: 60 seconds
 });
 ```
+
+#### Remote Config Initialization Options
+
+| Option | Type | Default | Description |
+|--------|------|---------|-------------|
+| `minimumFetchIntervalInSeconds` | `number` | `43200` (12 hours) | Minimum interval between fetches in seconds |
+| `fetchTimeoutInSeconds` | `number` | `60` | Fetch timeout in seconds |
 
 ### 2. Set Default Values
 
@@ -56,6 +64,28 @@ const { asString } = await FirebaseKit.remoteConfig.getValue({
 console.log('Welcome message:', asString);
 ```
 
+## Configuration Settings
+
+### Get Current Settings
+
+```typescript
+// Get current Remote Config settings
+const settings = await FirebaseKit.remoteConfig.getSettings();
+
+console.log('Minimum fetch interval:', settings.minimumFetchIntervalInSeconds);
+console.log('Fetch timeout:', settings.fetchTimeoutInSeconds);
+```
+
+### Update Settings
+
+```typescript
+// Update Remote Config settings
+await FirebaseKit.remoteConfig.setSettings({
+  minimumFetchIntervalInSeconds: 1800,  // 30 minutes
+  fetchTimeoutInSeconds: 30  // 30 seconds
+});
+```
+
 ## Configuration Management
 
 ### Fetch Configuration
@@ -63,7 +93,9 @@ console.log('Welcome message:', asString);
 ```typescript
 try {
   // Fetch latest configuration from server
-  await FirebaseKit.remoteConfig.fetch();
+  await FirebaseKit.remoteConfig.fetch({
+    minimumFetchIntervalInSeconds: 0  // Default: uses the initialized value
+  });
   
   // Activate the fetched configuration
   const { activated } = await FirebaseKit.remoteConfig.activate();
@@ -80,7 +112,9 @@ try {
 
 ```typescript
 try {
-  const { activated } = await FirebaseKit.remoteConfig.fetchAndActivate();
+  const { activated } = await FirebaseKit.remoteConfig.fetchAndActivate({
+    minimumFetchIntervalInSeconds: 0  // Default: uses the initialized value
+  });
   
   if (activated) {
     console.log('New configuration fetched and activated');
@@ -267,7 +301,9 @@ class ConfigAutoRefresh {
   start() {
     this.intervalId = setInterval(async () => {
       try {
-        const { activated } = await FirebaseKit.remoteConfig.fetchAndActivate();
+        const { activated } = await FirebaseKit.remoteConfig.fetchAndActivate({
+          minimumFetchIntervalInSeconds: 0  // Force immediate fetch for auto-refresh
+        });
         if (activated) {
           console.log('Configuration auto-refreshed');
         }

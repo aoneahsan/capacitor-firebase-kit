@@ -52,7 +52,7 @@ export class FirebaseKitWeb extends WebPlugin implements FirebaseKitPlugin {
 
   constructor() {
     super();
-    
+
     // Initialize service implementations
     this.appCheck = new AppCheckWebService();
     this.adMob = new AdMobWebService();
@@ -78,19 +78,21 @@ class AppCheckWebService extends WebPlugin implements AppCheckService {
 
     try {
       const firebase = (window as any).firebase;
-      
+
       // Initialize App Check based on provider
       if (options.provider === 'recaptchaV3' || options.provider === 'recaptchaEnterprise') {
         if (!options.siteKey) {
           throw this.createError('Site key required for reCAPTCHA provider', FirebaseKitErrorCode.INVALID_ARGUMENT);
         }
 
-        const provider = options.provider === 'recaptchaV3' 
+        const provider = options.provider === 'recaptchaV3'
           ? new firebase.appCheck.ReCaptchaV3Provider(options.siteKey)
           : new firebase.appCheck.ReCaptchaEnterpriseProvider(options.siteKey);
 
         this.appCheckInstance = firebase.appCheck();
-        await this.appCheckInstance.activate(provider, options.isTokenAutoRefreshEnabled);
+        // Default to false for token auto-refresh if not specified
+        const isTokenAutoRefreshEnabled = options.isTokenAutoRefreshEnabled ?? false;
+        await this.appCheckInstance.activate(provider, isTokenAutoRefreshEnabled);
         this.isInitialized = true;
       } else if (options.provider === 'debug') {
         // Debug provider for development
@@ -103,7 +105,7 @@ class AppCheckWebService extends WebPlugin implements AppCheckService {
         // Other providers not supported on web
         throw this.createError(
           `Provider ${options.provider} not supported on web platform`,
-          FirebaseKitErrorCode.NOT_SUPPORTED_ON_PLATFORM
+          FirebaseKitErrorCode.NOT_SUPPORTED_ON_PLATFORM,
         );
       }
     } catch (error: any) {
@@ -113,7 +115,7 @@ class AppCheckWebService extends WebPlugin implements AppCheckService {
 
   async getToken(options?: AppCheckTokenOptions): Promise<AppCheckTokenResult> {
     this.ensureInitialized();
-    
+
     try {
       const tokenResult = await this.appCheckInstance.getToken(options?.forceRefresh);
       return {
@@ -132,10 +134,10 @@ class AppCheckWebService extends WebPlugin implements AppCheckService {
 
   async addListener(
     _eventName: 'appCheckTokenChanged',
-    listenerFunc: (token: AppCheckTokenResult) => void
+    listenerFunc: (token: AppCheckTokenResult) => void,
   ): Promise<PluginListenerHandle> {
     this.ensureInitialized();
-    
+
     const unsubscribe = this.appCheckInstance.onTokenChanged((tokenResult: any) => {
       listenerFunc({
         token: tokenResult.token,
@@ -225,7 +227,7 @@ class AdMobWebService extends WebPlugin implements AdMobService {
 
   async addListener(
     _eventName: AdMobEventType,
-    _listenerFunc: (info: any) => void
+    _listenerFunc: (info: any) => void,
   ): Promise<PluginListenerHandle> {
     throw this.unimplemented('AdMob is not supported on web platform.');
   }
@@ -265,9 +267,9 @@ class CrashlyticsWebService extends WebPlugin implements CrashlyticsService {
       userId: this.userId,
       customKeys: { ...this.customKeys },
     };
-    
+
     console.error('[FirebaseKit Crashlytics Exception]', error);
-    
+
     // In a real implementation, this would send to a logging service
     if ((window as any).firebase?.crashlytics) {
       try {
@@ -308,7 +310,7 @@ class CrashlyticsWebService extends WebPlugin implements CrashlyticsService {
   }
 
   async recordBreadcrumb(options: { name: string; params?: Record<string, any> }): Promise<void> {
-    const breadcrumb = `[Breadcrumb] ${options.name}${options.params ? ': ' + JSON.stringify(options.params) : ''}`;
+    const breadcrumb = `[Breadcrumb] ${options.name}${options.params ? `: ${  JSON.stringify(options.params)}` : ''}`;
     this.logs.push(`[${new Date().toISOString()}] ${breadcrumb}`);
     console.log('[FirebaseKit Crashlytics]', breadcrumb);
   }
@@ -325,9 +327,18 @@ class PerformanceWebService extends WebPlugin implements PerformanceService {
     if (typeof window !== 'undefined' && (window as any).firebase?.performance) {
       try {
         this.performanceInstance = (window as any).firebase.performance();
-        if (options?.enabled !== undefined) {
-        this.performanceInstance.setPerformanceCollectionEnabled(options.enabled);
-      }
+
+        // Set performance collection enabled with proper default (true if not specified)
+        const enabled = options?.enabled ?? true;
+        this.performanceInstance.setPerformanceCollectionEnabled(enabled);
+
+        // Set data collection enabled if specified
+        if (options?.dataCollectionEnabled !== undefined) {
+          this.performanceInstance.setPerformanceCollectionEnabled(options.dataCollectionEnabled);
+        }
+
+        // Note: instrumentationEnabled is typically handled at SDK initialization level
+        // and may not be configurable after initialization on web
       } catch (error) {
         console.warn('[FirebaseKit Performance] Failed to initialize:', error);
       }
@@ -349,7 +360,7 @@ class PerformanceWebService extends WebPlugin implements PerformanceService {
 
   async startTrace(options: { traceName: string }): Promise<{ traceId: string }> {
     const traceId = `trace_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
-    
+
     if (this.performanceInstance) {
       try {
         const trace = this.performanceInstance.trace(options.traceName);
@@ -367,7 +378,7 @@ class PerformanceWebService extends WebPlugin implements PerformanceService {
         attributes: {},
       });
     }
-    
+
     return { traceId };
   }
 
@@ -485,21 +496,26 @@ class AnalyticsWebService extends WebPlugin implements AnalyticsService {
       try {
         this.analyticsInstance = (window as any).firebase.analytics();
         this.isInitialized = true;
-        
-        if (options?.collectionEnabled !== undefined) {
-          await this.analyticsInstance.setAnalyticsCollectionEnabled(options.collectionEnabled);
+
+        // Set collection enabled with proper default (true if not specified)
+        const collectionEnabled = options?.collectionEnabled ?? true;
+        await this.analyticsInstance.setAnalyticsCollectionEnabled(collectionEnabled);
+
+        // Set session timeout if provided
+        if (options?.sessionTimeoutDuration !== undefined) {
+          await this.analyticsInstance.setSessionTimeoutDuration(options.sessionTimeoutDuration * 1000);
         }
       } catch (error) {
         console.warn('[FirebaseKit Analytics] Firebase Analytics not available:', error);
       }
     }
-    
+
     // Fallback to gtag if available
     if (!this.isInitialized && typeof window !== 'undefined' && (window as any).gtag) {
       this.gtag = (window as any).gtag;
       this.isInitialized = true;
     }
-    
+
     if (!this.isInitialized) {
       throw this.createError('Analytics not available. Load Firebase or Google Analytics first.', FirebaseKitErrorCode.NOT_INITIALIZED);
     }
@@ -518,7 +534,7 @@ class AnalyticsWebService extends WebPlugin implements AnalyticsService {
 
   async setCurrentScreen(options: { screenName: string; screenClass?: string }): Promise<void> {
     this.ensureInitialized();
-    
+
     if (this.analyticsInstance) {
       await this.analyticsInstance.setCurrentScreen(options.screenName, options.screenClass);
     } else if (this.gtag) {
@@ -531,7 +547,7 @@ class AnalyticsWebService extends WebPlugin implements AnalyticsService {
 
   async logEvent(options: LogEventOptions): Promise<void> {
     this.ensureInitialized();
-    
+
     if (this.analyticsInstance) {
       await this.analyticsInstance.logEvent(options.name, options.params);
     } else if (this.gtag) {
@@ -541,7 +557,7 @@ class AnalyticsWebService extends WebPlugin implements AnalyticsService {
 
   async setUserProperty(options: { key: string; value: string }): Promise<void> {
     this.ensureInitialized();
-    
+
     if (this.analyticsInstance) {
       await this.analyticsInstance.setUserProperties({ [options.key]: options.value });
     } else if (this.gtag) {
@@ -551,7 +567,7 @@ class AnalyticsWebService extends WebPlugin implements AnalyticsService {
 
   async setUserId(options: { userId: string | null }): Promise<void> {
     this.ensureInitialized();
-    
+
     if (this.analyticsInstance) {
       await this.analyticsInstance.setUserId(options.userId);
     } else if (this.gtag) {
@@ -563,7 +579,7 @@ class AnalyticsWebService extends WebPlugin implements AnalyticsService {
 
   async setSessionTimeoutDuration(options: { duration: number }): Promise<void> {
     this.ensureInitialized();
-    
+
     if (this.analyticsInstance) {
       await this.analyticsInstance.setSessionTimeoutDuration(options.duration);
     } else if (this.gtag) {
@@ -575,18 +591,18 @@ class AnalyticsWebService extends WebPlugin implements AnalyticsService {
 
   async getAppInstanceId(): Promise<{ appInstanceId: string }> {
     this.ensureInitialized();
-    
+
     if (this.analyticsInstance) {
       const appInstanceId = await this.analyticsInstance.getAppInstanceId();
       return { appInstanceId };
     }
-    
+
     // Generate a pseudo app instance ID for gtag
     const storedId = localStorage.getItem('firebase_kit_app_instance_id');
     if (storedId) {
       return { appInstanceId: storedId };
     }
-    
+
     const newId = `web_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
     localStorage.setItem('firebase_kit_app_instance_id', newId);
     return { appInstanceId: newId };
@@ -594,22 +610,22 @@ class AnalyticsWebService extends WebPlugin implements AnalyticsService {
 
   async resetAnalyticsData(): Promise<void> {
     this.ensureInitialized();
-    
+
     if (this.analyticsInstance) {
       // Firebase doesn't have a direct reset method on web
       console.warn('[FirebaseKit Analytics] Reset not directly supported on web. Clear user properties and ID instead.');
       await this.analyticsInstance.setUserId(null);
     }
-    
+
     localStorage.removeItem('firebase_kit_app_instance_id');
   }
 
   async setConsent(options: ConsentSettings): Promise<void> {
     this.ensureInitialized();
-    
+
     if (this.gtag) {
       const consentConfig: any = {};
-      
+
       if (options.analyticsStorage !== undefined) {
         consentConfig.analytics_storage = options.analyticsStorage;
       }
@@ -622,7 +638,7 @@ class AnalyticsWebService extends WebPlugin implements AnalyticsService {
       if (options.adPersonalization !== undefined) {
         consentConfig.ad_personalization = options.adPersonalization;
       }
-      
+
       this.gtag('consent', 'update', consentConfig);
     } else {
       console.warn('[FirebaseKit Analytics] Consent management requires gtag');
@@ -631,7 +647,7 @@ class AnalyticsWebService extends WebPlugin implements AnalyticsService {
 
   async setDefaultEventParameters(options: { params: Record<string, any> | null }): Promise<void> {
     this.ensureInitialized();
-    
+
     if (this.analyticsInstance) {
       // Firebase Analytics web SDK doesn't support default parameters directly
       console.warn('[FirebaseKit Analytics] Default parameters not supported in Firebase Analytics web SDK');
@@ -670,19 +686,19 @@ class RemoteConfigWebService extends WebPlugin implements RemoteConfigService {
 
     try {
       this.remoteConfigInstance = (window as any).firebase.remoteConfig();
-      
-      // Set settings if provided
-      if (options) {
-        const settings: any = {};
-        if (options.minimumFetchIntervalInSeconds !== undefined) {
-          settings.minimumFetchIntervalMillis = options.minimumFetchIntervalInSeconds * 1000;
-        }
-        if (options.fetchTimeoutInSeconds !== undefined) {
-          settings.fetchTimeoutMillis = options.fetchTimeoutInSeconds * 1000;
-        }
-        this.remoteConfigInstance.settings = settings;
-      }
-      
+
+      // Set settings with proper defaults
+      const settings: any = {};
+
+      // Default minimum fetch interval is 12 hours (43200 seconds) for production
+      const minimumFetchIntervalInSeconds = options?.minimumFetchIntervalInSeconds ?? 43200;
+      settings.minimumFetchIntervalMillis = minimumFetchIntervalInSeconds * 1000;
+
+      // Default fetch timeout is 60 seconds
+      const fetchTimeoutInSeconds = options?.fetchTimeoutInSeconds ?? 60;
+      settings.fetchTimeoutMillis = fetchTimeoutInSeconds * 1000;
+
+      this.remoteConfigInstance.settings = settings;
       this.isInitialized = true;
     } catch (error: any) {
       throw this.createError(error.message || 'Failed to initialize Remote Config', FirebaseKitErrorCode.INTERNAL);
@@ -696,14 +712,14 @@ class RemoteConfigWebService extends WebPlugin implements RemoteConfigService {
 
   async fetch(options?: RemoteConfigFetchOptions): Promise<void> {
     this.ensureInitialized();
-    
+
     try {
       if (options?.minimumFetchIntervalInSeconds !== undefined) {
         const settings = { ...this.remoteConfigInstance.settings };
         settings.minimumFetchIntervalMillis = options.minimumFetchIntervalInSeconds * 1000;
         this.remoteConfigInstance.settings = settings;
       }
-      
+
       await this.remoteConfigInstance.fetch();
     } catch (error: any) {
       throw this.createError(error.message || 'Failed to fetch config', FirebaseKitErrorCode.CONFIG_FETCH_FAILED);
@@ -712,15 +728,15 @@ class RemoteConfigWebService extends WebPlugin implements RemoteConfigService {
 
   async activate(): Promise<{ activated: boolean }> {
     this.ensureInitialized();
-    
+
     try {
       const activated = await this.remoteConfigInstance.activate();
-      
+
       // Notify listeners if activated
       if (activated) {
         this.notifyConfigListeners();
       }
-      
+
       return { activated };
     } catch (error: any) {
       throw this.createError(error.message || 'Failed to activate config', FirebaseKitErrorCode.CONFIG_UPDATE_FAILED);
@@ -729,7 +745,7 @@ class RemoteConfigWebService extends WebPlugin implements RemoteConfigService {
 
   async fetchAndActivate(options?: RemoteConfigFetchOptions): Promise<{ activated: boolean }> {
     this.ensureInitialized();
-    
+
     try {
       await this.fetch(options);
       return await this.activate();
@@ -740,9 +756,9 @@ class RemoteConfigWebService extends WebPlugin implements RemoteConfigService {
 
   async getValue(options: { key: string }): Promise<RemoteConfigValue> {
     this.ensureInitialized();
-    
+
     const value = this.remoteConfigInstance.getValue(options.key);
-    
+
     return {
       asString: value.asString(),
       asNumber: value.asNumber(),
@@ -753,10 +769,10 @@ class RemoteConfigWebService extends WebPlugin implements RemoteConfigService {
 
   async getAll(): Promise<{ values: Record<string, RemoteConfigValue> }> {
     this.ensureInitialized();
-    
+
     const all = this.remoteConfigInstance.getAll();
     const values: Record<string, RemoteConfigValue> = {};
-    
+
     for (const [key, value] of Object.entries(all)) {
       values[key] = {
         asString: (value as any).asString(),
@@ -765,15 +781,15 @@ class RemoteConfigWebService extends WebPlugin implements RemoteConfigService {
         source: (value as any).getSource() as any,
       };
     }
-    
+
     return { values };
   }
 
   async getSettings(): Promise<RemoteConfigSettings> {
     this.ensureInitialized();
-    
+
     const settings = this.remoteConfigInstance.settings;
-    
+
     return {
       minimumFetchIntervalInSeconds: settings.minimumFetchIntervalMillis / 1000,
       fetchTimeoutInSeconds: settings.fetchTimeoutMillis / 1000,
@@ -782,7 +798,7 @@ class RemoteConfigWebService extends WebPlugin implements RemoteConfigService {
 
   async setSettings(options: RemoteConfigSettings): Promise<void> {
     this.ensureInitialized();
-    
+
     this.remoteConfigInstance.settings = {
       minimumFetchIntervalMillis: options.minimumFetchIntervalInSeconds * 1000,
       fetchTimeoutMillis: options.fetchTimeoutInSeconds * 1000,
@@ -797,24 +813,24 @@ class RemoteConfigWebService extends WebPlugin implements RemoteConfigService {
 
   async reset(): Promise<void> {
     this.ensureInitialized();
-    
+
     // Clear all values by setting empty defaults
     this.remoteConfigInstance.defaultConfig = {};
-    
+
     // Clear listeners
     this.configListeners.clear();
   }
 
   async addListener(
     eventName: 'remoteConfigUpdated',
-    listenerFunc: (config: RemoteConfigUpdate) => void
+    listenerFunc: (config: RemoteConfigUpdate) => void,
   ): Promise<PluginListenerHandle> {
     if (!this.configListeners.has(eventName)) {
       this.configListeners.set(eventName, []);
     }
-    
+
     this.configListeners.get(eventName)!.push(listenerFunc);
-    
+
     return {
       remove: async () => {
         const listeners = this.configListeners.get(eventName);
@@ -834,9 +850,9 @@ class RemoteConfigWebService extends WebPlugin implements RemoteConfigService {
       // Get all keys that have been updated
       const all = this.remoteConfigInstance.getAll();
       const updatedKeys = Object.keys(all);
-      
+
       const update: RemoteConfigUpdate = { updatedKeys };
-      
+
       listeners.forEach(listener => {
         try {
           listener(update);

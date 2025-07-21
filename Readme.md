@@ -6,6 +6,23 @@
 
 A comprehensive Firebase services plugin for Capacitor that provides secure, type-safe, and framework-independent access to Firebase services across Android, iOS, and Web platforms.
 
+## 📚 Documentation
+
+- 📖 **[Full Documentation](./docs/README.md)** - Complete guide and API reference
+- 🚀 **[Getting Started](./docs/getting-started.md)** - Quick setup guide
+- 📋 **[API Reference](./docs/api-reference.md)** - Detailed API documentation
+- 💡 **[Examples](./docs/examples.md)** - Code examples and use cases
+- 🔧 **[Troubleshooting](./docs/TROUBLESHOOTING.md)** - Common issues and solutions
+- 🔄 **[Migration Guide](./docs/migration-guide.md)** - Upgrade from older versions
+
+### Service-Specific Documentation
+- 🔐 **[App Check](./docs/services/app-check.md)** - Protect your backend resources
+- 💰 **[AdMob](./docs/services/admob.md)** - Monetization with ads
+- 📊 **[Analytics](./docs/services/analytics.md)** - User behavior tracking
+- 🐛 **[Crashlytics](./docs/services/crashlytics.md)** - Crash reporting
+- 📈 **[Performance](./docs/services/performance.md)** - Performance monitoring
+- ⚙️ **[Remote Config](./docs/services/remote-config.md)** - Dynamic configuration
+
 ## 🚀 Features
 
 - 🔐 **App Check** - Protect your backend resources from abuse
