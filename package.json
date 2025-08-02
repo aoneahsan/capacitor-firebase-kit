@@ -1,6 +1,6 @@
 {
   "name": "capacitor-firebase-kit",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "Provider-less Firebase Kit - Universal Firebase services integration for React, React Native, and Capacitor apps",
   "main": "dist/plugin.cjs.js",
   "module": "dist/esm/index.js",
