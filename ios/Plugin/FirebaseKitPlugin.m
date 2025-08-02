@@ -3,7 +3,7 @@
 
 // Define the plugin using the CAP_PLUGIN Macro, and
 // each method the plugin supports using the CAP_PLUGIN_METHOD macro.
-CAP_PLUGIN(FirebaseKitPlugin, "FirebaseKit",
+CAP_PLUGIN(FirebaseKitPlugin, "CapacitorFirebaseKit",
     // App Check Methods
     CAP_PLUGIN_METHOD(appCheckInitialize, CAPPluginReturnPromise);
     CAP_PLUGIN_METHOD(appCheckGetToken, CAPPluginReturnPromise);
