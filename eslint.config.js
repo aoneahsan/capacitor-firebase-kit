@@ -15,7 +15,9 @@ export default [
       '**/.idea/**',
       '**/.vscode/**',
       '**/scripts/**',
-      '**/bin/**'
+      '**/bin/**',
+      '**/examples/**',
+      'capacitor.config.ts'
     ]
   },
   {

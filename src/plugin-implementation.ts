@@ -1,5 +1,4 @@
-import { WebPlugin } from '@capacitor/core';
-import type { PluginListenerHandle } from '@capacitor/core';
+import { WebPlugin, type PluginListenerHandle } from '@capacitor/core';
 import { FirebaseKitWeb } from './web';
 
 /**

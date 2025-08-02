@@ -1,5 +1,4 @@
-import { WebPlugin } from '@capacitor/core';
-import type { PluginListenerHandle } from '@capacitor/core';
+import { WebPlugin, type PluginListenerHandle } from '@capacitor/core';
 
 import type {
   FirebaseKitPlugin,
@@ -254,7 +253,7 @@ class CrashlyticsWebService extends WebPlugin implements CrashlyticsService {
 
   async log(options: { message: string }): Promise<void> {
     this.logs.push(`[${new Date().toISOString()}] ${options.message}`);
-    console.log('[FirebaseKit Crashlytics]', options.message);
+    console.warn('[FirebaseKit Crashlytics]', options.message);
   }
 
   async logException(options: CrashlyticsExceptionOptions): Promise<void> {
@@ -274,7 +273,7 @@ class CrashlyticsWebService extends WebPlugin implements CrashlyticsService {
     if ((window as any).firebase?.crashlytics) {
       try {
         (window as any).firebase.crashlytics().recordError(new Error(options.message));
-      } catch (e) {
+      } catch {
         console.warn('Firebase Crashlytics not available on web');
       }
     }
@@ -282,16 +281,16 @@ class CrashlyticsWebService extends WebPlugin implements CrashlyticsService {
 
   async setUserId(options: { userId: string }): Promise<void> {
     this.userId = options.userId;
-    console.log('[FirebaseKit Crashlytics] User ID set:', options.userId);
+    console.warn('[FirebaseKit Crashlytics] User ID set:', options.userId);
   }
 
   async setCustomKeys(options: { attributes: Record<string, string | number | boolean> }): Promise<void> {
     this.customKeys = { ...this.customKeys, ...options.attributes };
-    console.log('[FirebaseKit Crashlytics] Custom keys updated:', this.customKeys);
+    console.warn('[FirebaseKit Crashlytics] Custom keys updated:', this.customKeys);
   }
 
   async setCrashlyticsCollectionEnabled(options: { enabled: boolean }): Promise<void> {
-    console.log('[FirebaseKit Crashlytics] Collection enabled:', options.enabled);
+    console.warn('[FirebaseKit Crashlytics] Collection enabled:', options.enabled);
   }
 
   async isCrashlyticsCollectionEnabled(): Promise<{ enabled: boolean }> {
@@ -301,18 +300,18 @@ class CrashlyticsWebService extends WebPlugin implements CrashlyticsService {
 
   async deleteUnsentReports(): Promise<void> {
     this.logs = [];
-    console.log('[FirebaseKit Crashlytics] Unsent reports deleted');
+    console.warn('[FirebaseKit Crashlytics] Unsent reports deleted');
   }
 
   async sendUnsentReports(): Promise<void> {
-    console.log('[FirebaseKit Crashlytics] Sending reports:', this.logs);
+    console.warn('[FirebaseKit Crashlytics] Sending reports:', this.logs);
     // In a real implementation, this would send logs to a service
   }
 
   async recordBreadcrumb(options: { name: string; params?: Record<string, any> }): Promise<void> {
     const breadcrumb = `[Breadcrumb] ${options.name}${options.params ? `: ${  JSON.stringify(options.params)}` : ''}`;
     this.logs.push(`[${new Date().toISOString()}] ${breadcrumb}`);
-    console.log('[FirebaseKit Crashlytics]', breadcrumb);
+    console.warn('[FirebaseKit Crashlytics]', breadcrumb);
   }
 }
 
@@ -474,7 +473,7 @@ class PerformanceWebService extends WebPlugin implements PerformanceService {
     if (this.performanceInstance) {
       try {
         // Firebase Performance automatically tracks network requests
-        console.log('[FirebaseKit Performance] Network request recorded:', options.url);
+        console.warn('[FirebaseKit Performance] Network request recorded:', options.url);
       } catch (error) {
         console.warn('[FirebaseKit Performance] Failed to record network request:', error);
       }

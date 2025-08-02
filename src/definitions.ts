@@ -1209,3 +1209,9 @@ export interface FirebaseKitError {
    */
   details?: any;
 }
+
+/**
+ * Type alias for backward compatibility with Capacitor plugin
+ * @deprecated Use FirebaseKitPlugin instead
+ */
+export type CapacitorFirebaseKitPlugin = FirebaseKitPlugin;

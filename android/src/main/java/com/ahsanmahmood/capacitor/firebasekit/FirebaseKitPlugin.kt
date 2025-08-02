@@ -6,7 +6,7 @@ import com.getcapacitor.PluginMethod
 import com.getcapacitor.annotation.CapacitorPlugin
 import com.ahsanmahmood.capacitor.firebasekit.services.*
 
-@CapacitorPlugin(name = "FirebaseKit")
+@CapacitorPlugin(name = "CapacitorFirebaseKit")
 class FirebaseKitPlugin : Plugin() {
     
     private lateinit var appCheckService: AppCheckService

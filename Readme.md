@@ -1,29 +1,22 @@
-# Capacitor Firebase Kit
+# Firebase Kit
 
 [![npm version](https://badge.fury.io/js/capacitor-firebase-kit.svg)](https://badge.fury.io/js/capacitor-firebase-kit)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![npm downloads](https://img.shields.io/npm/dm/capacitor-firebase-kit.svg)](https://www.npmjs.com/package/capacitor-firebase-kit)
 
-A comprehensive Firebase services plugin for Capacitor that provides secure, type-safe, and framework-independent access to Firebase services across Android, iOS, and Web platforms.
+A **provider-less**, universal Firebase services integration that works seamlessly across React, React Native, and Capacitor apps - no providers or context required!
 
-## 📚 Documentation
+## ✨ Key Features
 
-- 📖 **[Full Documentation](./docs/README.md)** - Complete guide and API reference
-- 🚀 **[Getting Started](./docs/getting-started.md)** - Quick setup guide
-- 📋 **[API Reference](./docs/api-reference.md)** - Detailed API documentation
-- 💡 **[Examples](./docs/examples.md)** - Code examples and use cases
-- 🔧 **[Troubleshooting](./docs/TROUBLESHOOTING.md)** - Common issues and solutions
-- 🔄 **[Migration Guide](./docs/migration-guide.md)** - Upgrade from older versions
+- 🚀 **Provider-less Architecture** - Works like Zustand, no React Context needed
+- 🌍 **Universal Support** - React, React Native, Capacitor, and Node.js
+- 📦 **Zero Config** - Automatic platform detection and adapter loading
+- 🎯 **Tree-Shakeable** - Only loads the Firebase SDKs you actually use
+- 💪 **TypeScript First** - Full type safety and IntelliSense support
+- 🔄 **Dynamic Imports** - Firebase SDKs are loaded on-demand
+- 🎨 **Works Anywhere** - In server components, dynamic imports, and more
 
-### Service-Specific Documentation
-- 🔐 **[App Check](./docs/services/app-check.md)** - Protect your backend resources
-- 💰 **[AdMob](./docs/services/admob.md)** - Monetization with ads
-- 📊 **[Analytics](./docs/services/analytics.md)** - User behavior tracking
-- 🐛 **[Crashlytics](./docs/services/crashlytics.md)** - Crash reporting
-- 📈 **[Performance](./docs/services/performance.md)** - Performance monitoring
-- ⚙️ **[Remote Config](./docs/services/remote-config.md)** - Dynamic configuration
-
-## 🚀 Features
+## 🚀 Supported Services
 
 - 🔐 **App Check** - Protect your backend resources from abuse
 - 💰 **AdMob** - Monetize with banner, interstitial, and rewarded ads  
@@ -31,413 +24,272 @@ A comprehensive Firebase services plugin for Capacitor that provides secure, typ
 - 📊 **Performance Monitoring** - Monitor app performance metrics
 - 📈 **Analytics** - Understand user behavior and app usage
 - ⚙️ **Remote Config** - Dynamically configure your app
-- 📱 **Cross-platform** - Works on iOS, Android, and Web
-- 🔍 **Type-safe** - Full TypeScript support with comprehensive types
-- 🎯 **Framework-agnostic** - Works with any JavaScript framework
-- 🛡️ **Production-ready** - Battle-tested and reliable
 
 ## 📦 Installation
 
 ```bash
 npm install capacitor-firebase-kit
-npx cap sync
+
+# Firebase SDKs are loaded on-demand, but you can pre-install them:
+# For Web/React apps:
+npm install firebase
+
+# For React Native apps:
+npm install @react-native-firebase/app @react-native-firebase/analytics
+# ... other React Native Firebase packages as needed
+
+# For Capacitor apps:
+npm install @capacitor/core  # Optional, only if using Capacitor
 ```
 
-Or with yarn:
+## 🔥 Quick Start
 
-```bash
-yarn add capacitor-firebase-kit
-npx cap sync
-```
+### React/Next.js App
 
-## 🔧 Setup
+```tsx
+import firebaseKit from 'capacitor-firebase-kit';
 
-### Prerequisites
+// Initialize once in your app
+await firebaseKit.initialize({
+  apiKey: 'YOUR_API_KEY',
+  authDomain: 'YOUR_AUTH_DOMAIN',
+  projectId: 'YOUR_PROJECT_ID',
+  storageBucket: 'YOUR_STORAGE_BUCKET',
+  messagingSenderId: 'YOUR_MESSAGING_SENDER_ID',
+  appId: 'YOUR_APP_ID',
+});
 
-1. Create a Firebase project at [Firebase Console](https://console.firebase.google.com)
-2. Add your iOS and Android apps to the Firebase project
-3. Download configuration files:
-   - **Android**: Download `google-services.json` and place it in `android/app/`
-   - **iOS**: Download `GoogleService-Info.plist` and add it to your Xcode project
+// Use anywhere - no providers needed!
+function MyComponent() {
+  const trackEvent = () => {
+    firebaseKit.analytics.logEvent('button_click', {
+      screen: 'home',
+      button: 'cta',
+    });
+  };
 
-### Automatic Setup (Recommended)
+  return <button onClick={trackEvent}>Click Me</button>;
+}
 
-After installing the plugin, it will automatically check your project configuration. To apply automatic fixes:
-
-```bash
-# Configure both platforms
-npx capacitor-firebase-kit configure all
-
-# Or configure specific platform
-npx capacitor-firebase-kit configure android
-npx capacitor-firebase-kit configure ios
-```
-
-This will:
-- ✅ Add required Gradle plugins for Android
-- ✅ Configure Firebase initialization for iOS
-- ✅ Update build files automatically
-- ✅ Create backups of modified files
-
-### Manual Setup (If Automatic Setup Fails)
-
-#### Android Setup
-
-1. Add the following to your app's `android/build.gradle`:
-
-```gradle
-buildscript {
-    dependencies {
-        classpath 'com.google.gms:google-services:4.4.0'
-        classpath 'com.google.firebase:firebase-crashlytics-gradle:2.9.9'
-        classpath 'com.google.firebase:perf-plugin:1.4.2'
-    }
+// Works in server components too!
+export default async function ServerComponent() {
+  const config = await firebaseKit.remoteConfig.getString('welcome_message');
+  return <h1>{config.value}</h1>;
 }
 ```
 
-2. Apply the plugins in `android/app/build.gradle`:
+### React Native App
 
-```gradle
-apply plugin: 'com.google.gms.google-services'
-apply plugin: 'com.google.firebase.crashlytics'
-apply plugin: 'com.google.firebase.firebase-perf'
-```
+```tsx
+import firebaseKit from 'capacitor-firebase-kit';
 
-#### iOS Setup
+// Initialize in your App.tsx
+firebaseKit.initialize({}); // Config from native files
 
-1. Add the following to your `ios/App/Podfile`:
+// Use anywhere without providers
+export function Screen() {
+  const logPurchase = () => {
+    firebaseKit.analytics.logEvent('purchase', {
+      value: 29.99,
+      currency: 'USD',
+    });
+  };
 
-```ruby
-platform :ios, '13.0'
-use_frameworks!
-```
-
-2. Run `cd ios/App && pod install`
-
-3. Initialize Firebase in your `AppDelegate.swift`:
-
-```swift
-import Firebase
-
-@UIApplicationMain
-class AppDelegate: UIResponder, UIApplicationDelegate {
-    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-        FirebaseApp.configure()
-        return true
-    }
+  return <Button onPress={logPurchase} title="Buy Now" />;
 }
 ```
 
-### Why Manual Steps Are Needed
-
-Some configuration must be done at the app level because:
-
-1. **Build Configuration** - Firebase requires build-time processing of your configuration files
-2. **App Lifecycle** - Firebase must be initialized before any plugins load
-3. **Security** - Your Firebase configuration files contain project-specific credentials
-4. **Platform Requirements** - Each platform has specific initialization requirements
-
-The automatic setup script helps minimize these manual steps where possible.
-
-## 📖 Usage
-
-### Import the Plugin
+### Capacitor App
 
 ```typescript
-import { FirebaseKit } from 'capacitor-firebase-kit';
-```
+import firebaseKit from 'capacitor-firebase-kit';
 
-### App Check
-
-Protect your backend resources from abuse.
-
-```typescript
-// Initialize App Check
-await FirebaseKit.appCheck.initialize({
-  provider: 'playIntegrity', // Android: 'playIntegrity' or 'safetyNet'
-  // provider: 'deviceCheck', // iOS: 'deviceCheck' or 'appAttest'
-  // provider: 'recaptchaV3', // Web: 'recaptchaV3' or 'recaptchaEnterprise'
-  siteKey: 'your-recaptcha-site-key', // Required for web
-  isTokenAutoRefreshEnabled: true
+// Initialize on app start
+firebaseKit.initialize({
+  // Your Firebase config
 });
 
-// Get App Check token
-const { token } = await FirebaseKit.appCheck.getToken();
-
-// Listen for token changes
-await FirebaseKit.appCheck.addListener('appCheckTokenChanged', (token) => {
-  console.log('New token:', token);
-});
-```
-
-### AdMob
-
-Monetize your app with Google AdMob.
-
-```typescript
-// Initialize AdMob
-await FirebaseKit.adMob.initialize({
-  requestTrackingAuthorization: true, // iOS only
-  testingDevices: ['YOUR_TEST_DEVICE_ID']
-});
-
-// Request consent information
-const consentInfo = await FirebaseKit.adMob.requestConsentInfo();
-if (consentInfo.isConsentFormAvailable) {
-  await FirebaseKit.adMob.showConsentForm();
+// Use in any file or component
+export function trackUserAction(action: string) {
+  firebaseKit.analytics.logEvent('user_action', { action });
 }
-
-// Show a banner ad
-await FirebaseKit.adMob.showBanner({
-  adId: 'ca-app-pub-3940256099942544/6300978111', // Test ad ID
-  adSize: 'BANNER',
-  position: 'BOTTOM_CENTER'
-});
-
-// Load and show an interstitial ad
-await FirebaseKit.adMob.loadInterstitial({
-  adId: 'ca-app-pub-3940256099942544/1033173712'
-});
-await FirebaseKit.adMob.showInterstitial();
-
-// Load and show a rewarded ad
-await FirebaseKit.adMob.loadRewarded({
-  adId: 'ca-app-pub-3940256099942544/5224354917'
-});
-await FirebaseKit.adMob.showRewarded();
-
-// Listen for ad events
-await FirebaseKit.adMob.addListener('rewardedAdRewarded', (reward) => {
-  console.log('User earned reward:', reward);
-});
 ```
 
-### Crashlytics
+## 🎯 Why Provider-less?
 
-Track crashes and errors in your app.
+Traditional Firebase integrations require wrapping your app in providers:
 
-```typescript
-// Log a message
-await FirebaseKit.crashlytics.log({ message: 'User clicked checkout' });
-
-// Set user identifier
-await FirebaseKit.crashlytics.setUserId({ userId: 'user123' });
-
-// Set custom attributes
-await FirebaseKit.crashlytics.setCustomKeys({
-  attributes: {
-    subscription_type: 'premium',
-    user_level: 42,
-    beta_tester: true
-  }
-});
-
-// Log a non-fatal exception
-await FirebaseKit.crashlytics.logException({
-  message: 'API call failed',
-  code: 'API_ERROR',
-  stackTrace: [
-    {
-      fileName: 'api.service.ts',
-      lineNumber: 123,
-      methodName: 'fetchUserData'
-    }
-  ]
-});
-
-// Force a test crash (for testing only!)
-await FirebaseKit.crashlytics.crash();
+```tsx
+// ❌ Traditional approach - requires providers
+<FirebaseProvider>
+  <AnalyticsProvider>
+    <RemoteConfigProvider>
+      <App />
+    </RemoteConfigProvider>
+  </AnalyticsProvider>
+</FirebaseProvider>
 ```
 
-### Performance Monitoring
+With Firebase Kit:
 
-Monitor your app's performance.
+```tsx
+// ✅ Firebase Kit - no providers needed!
+import firebaseKit from 'capacitor-firebase-kit';
 
-```typescript
-// Initialize Performance Monitoring
-await FirebaseKit.performance.initialize({ enabled: true });
+// Just initialize and use anywhere
+firebaseKit.initialize({ ... });
 
-// Start a custom trace
-const { traceId } = await FirebaseKit.performance.startTrace({
-  traceName: 'checkout_flow'
-});
-
-// Add metrics and attributes
-await FirebaseKit.performance.incrementMetric({
-  traceId,
-  metricName: 'items_processed',
-  value: 5
-});
-
-await FirebaseKit.performance.putAttribute({
-  traceId,
-  attribute: 'payment_method',
-  value: 'credit_card'
-});
-
-// Stop the trace
-await FirebaseKit.performance.stopTrace({ traceId });
-
-// Monitor screen rendering
-const { traceId: screenTrace } = await FirebaseKit.performance.startScreenTrace({
-  screenName: 'ProductList'
-});
-// ... screen renders ...
-await FirebaseKit.performance.stopScreenTrace({ traceId: screenTrace });
+// Works in any component
+firebaseKit.analytics.logEvent('app_open');
 ```
+
+## 🔧 Platform-Specific Setup
+
+### Web/React
+No additional setup needed! Firebase SDKs are loaded dynamically when you use them.
+
+### React Native
+1. Follow the [React Native Firebase setup guide](https://rnfirebase.io/)
+2. Add your `google-services.json` (Android) and `GoogleService-Info.plist` (iOS)
+
+### Capacitor
+1. Add your `google-services.json` to `android/app/`
+2. Add your `GoogleService-Info.plist` to your iOS project
+3. Run `npx cap sync`
+
+## 📚 API Examples
 
 ### Analytics
-
-Track user behavior and app usage.
-
 ```typescript
-// Initialize Analytics
-await FirebaseKit.analytics.initialize({
-  collectionEnabled: true
-});
-
 // Log events
-await FirebaseKit.analytics.logEvent({
-  name: 'purchase',
-  params: {
-    value: 29.99,
-    currency: 'USD',
-    items: ['SKU123', 'SKU456']
-  }
+await firebaseKit.analytics.logEvent('level_complete', {
+  level: 5,
+  score: 1000,
 });
 
 // Set user properties
-await FirebaseKit.analytics.setUserProperty({
-  key: 'favorite_category',
-  value: 'electronics'
+await firebaseKit.analytics.setUserProperties({
+  subscription_type: 'premium',
 });
 
-// Set user ID
-await FirebaseKit.analytics.setUserId({ userId: 'user123' });
+// Set current screen
+await firebaseKit.analytics.setCurrentScreen('HomeScreen');
+```
 
-// Track screen views
-await FirebaseKit.analytics.setCurrentScreen({
-  screenName: 'ProductDetails',
-  screenClass: 'ProductViewController'
+### App Check
+```typescript
+// Initialize App Check
+await firebaseKit.appCheck.initialize({
+  provider: 'recaptcha-v3', // Web
+  // provider: 'playIntegrity', // Android
+  // provider: 'deviceCheck', // iOS
+  siteKey: 'YOUR_SITE_KEY',
 });
 
-// Set consent
-await FirebaseKit.analytics.setConsent({
-  analyticsStorage: 'granted',
-  adStorage: 'granted',
-  adUserData: 'granted',
-  adPersonalization: 'granted'
-});
+// Get token
+const { token } = await firebaseKit.appCheck.getToken();
+```
+
+### Crashlytics
+```typescript
+// Record exceptions
+try {
+  riskyOperation();
+} catch (error) {
+  await firebaseKit.crashlytics.recordException(error);
+}
+
+// Set user identifier
+await firebaseKit.crashlytics.setUserId('user123');
+
+// Log custom messages
+await firebaseKit.crashlytics.log('User clicked checkout');
+```
+
+### Performance Monitoring
+```typescript
+// Start a trace
+const { traceId } = await firebaseKit.performance.startTrace('api_call');
+
+// Add metrics
+await firebaseKit.performance.incrementMetric('api_call', 'response_size', 2048);
+
+// Stop the trace
+await firebaseKit.performance.stopTrace('api_call');
 ```
 
 ### Remote Config
-
-Dynamically configure your app.
-
 ```typescript
-// Initialize Remote Config
-await FirebaseKit.remoteConfig.initialize({
-  minimumFetchIntervalInSeconds: 3600
-});
-
-// Set default values
-await FirebaseKit.remoteConfig.setDefaults({
-  defaults: {
-    welcome_message: 'Welcome!',
-    button_color: '#FF0000',
-    feature_enabled: false
-  }
+// Initialize with defaults
+await firebaseKit.remoteConfig.initialize({
+  minimumFetchIntervalMillis: 3600000,
+  defaultConfig: {
+    feature_enabled: false,
+    api_endpoint: 'https://api.example.com',
+  },
 });
 
 // Fetch and activate
-const { activated } = await FirebaseKit.remoteConfig.fetchAndActivate();
+await firebaseKit.remoteConfig.fetchAndActivate();
 
 // Get values
-const { asString, asBoolean } = await FirebaseKit.remoteConfig.getValue({
-  key: 'welcome_message'
-});
-
-// Get all values
-const { values } = await FirebaseKit.remoteConfig.getAll();
-
-// Listen for updates
-await FirebaseKit.remoteConfig.addListener('remoteConfigUpdated', (update) => {
-  console.log('Config updated:', update.updatedKeys);
-});
+const { value: featureEnabled } = await firebaseKit.remoteConfig.getBoolean('feature_enabled');
 ```
 
-## 🔒 Type Safety
-
-This plugin is fully typed with TypeScript. All methods, parameters, and return types are strongly typed for better development experience and fewer runtime errors.
-
+### AdMob
 ```typescript
-import type {
-  AppCheckTokenResult,
-  ConsentStatus,
-  RemoteConfigValue,
-  LogEventOptions
-} from 'capacitor-firebase-kit';
+// Initialize AdMob
+await firebaseKit.adMob.initialize();
+
+// Show a banner ad
+await firebaseKit.adMob.showBanner({
+  adId: 'YOUR_BANNER_AD_ID',
+  adSize: 'BANNER',
+  position: 'BOTTOM_CENTER',
+});
+
+// Show an interstitial
+await firebaseKit.adMob.prepareInterstitial({
+  adId: 'YOUR_INTERSTITIAL_AD_ID',
+});
+await firebaseKit.adMob.showInterstitial();
 ```
 
-## 🚨 Error Handling
+## 🔄 Migration from Capacitor Plugin
 
-All methods return promises and will reject with typed error codes:
+If you're using the old Capacitor-specific version:
 
 ```typescript
-try {
-  await FirebaseKit.appCheck.getToken();
-} catch (error) {
-  if (error.code === 'APP_CHECK_TOKEN_EXPIRED') {
-    // Handle token expiration
-  }
-}
+// Old way (Capacitor only)
+import { FirebaseKit } from 'capacitor-firebase-kit';
+await FirebaseKit.analytics.logEvent({ name: 'event' });
+
+// New way (Universal)
+import firebaseKit from 'capacitor-firebase-kit';
+await firebaseKit.analytics.logEvent('event');
 ```
 
 ## 📱 Platform Support
 
-| Feature | iOS | Android | Web |
-|---------|-----|---------|-----|
-| App Check | ✅ | ✅ | ✅ |
-| AdMob | ✅ | ✅ | ❌ |
-| Crashlytics | ✅ | ✅ | ⚠️ |
-| Performance | ✅ | ✅ | ⚠️ |
-| Analytics | ✅ | ✅ | ✅ |
-| Remote Config | ✅ | ✅ | ✅ |
+| Service | Web | iOS | Android | React Native | Node.js |
+|---------|-----|-----|---------|--------------|---------|
+| Analytics | ✅ | ✅ | ✅ | ✅ | ❌ |
+| App Check | ✅ | ✅ | ✅ | ✅ | ❌ |
+| AdMob | ❌ | ✅ | ✅ | ✅ | ❌ |
+| Crashlytics | ❌ | ✅ | ✅ | ✅ | ❌ |
+| Performance | ✅ | ✅ | ✅ | ✅ | ❌ |
+| Remote Config | ✅ | ✅ | ✅ | ✅ | ❌ |
 
-✅ Fully supported
-⚠️ Partially supported (some features may not be available)
-❌ Not supported
-
-## 📄 License
-
-MIT
-
-## 👨‍💻 Author
-
-**Ahsan Mahmood**
-
-An experienced software engineer passionate about creating high-quality, open-source tools for the developer community.
-
-- 🌐 Website: [https://aoneahsan.com](https://aoneahsan.com)
-- 📧 Email: aoneahsan@gmail.com
-- 💼 LinkedIn: [https://linkedin.com/in/aoneahsan](https://linkedin.com/in/aoneahsan)
-- 🐦 Twitter: [@aoneahsan](https://twitter.com/aoneahsan)
-- 💻 GitHub: [@aoneahsan](https://github.com/aoneahsan)
+Note: Services marked with ❌ will log warnings but won't break your app.
 
 ## 🤝 Contributing
 
-Contributions are welcome! Please feel free to submit a Pull Request. For major changes, please open an issue first to discuss what you would like to change.
+We welcome contributions! Please see our [Contributing Guide](CONTRIBUTING.md) for details.
 
-Please make sure to update tests as appropriate.
+## 📄 License
 
-## 🆘 Support
+MIT © [Ahsan Mahmood](https://github.com/aoneahsan)
 
-For issues and feature requests, please [create an issue](https://github.com/aoneahsan/capacitor-firebase-kit/issues) on GitHub.
+## 🙏 Credits
 
-## 🌟 Acknowledgments
-
-This plugin is open-source and created for the community. Special thanks to all contributors and users who help make this project better.
-
----
-
-Made with ❤️ by Ahsan Mahmood for the Capacitor community
+Built with ❤️ by [Ahsan Mahmood](https://aoneahsan.com)
